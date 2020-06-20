@@ -232,7 +232,6 @@ initialsForm.addEventListener("submit", function(event) {
   }
 
   initials.push(initialsText);
-  initials.push(scorePerCent);
   initialsInput.value = "";
 
   storeInitials();
