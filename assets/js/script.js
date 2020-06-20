@@ -1,4 +1,3 @@
-// select all elements
 const start = document.getElementById("start");
 const quiz = document.getElementById("quiz");
 const question = document.getElementById("question");
@@ -11,12 +10,13 @@ const progress = document.getElementById("progress");
 const scoreDiv = document.getElementById("scoreContainer");
 
 var whiteHeader = document.querySelector(".white-bg");
-var enterScore = document.querySelector(".todos");
+var enterScore = document.querySelector(".initials");
+
+var initialsInput = document.querySelector("#initials-text");
+var initialsForm = document.querySelector("#initials-form");
+var initialsList = document.querySelector("#initials-list");
 
 
-
-
-// create our questions
 let questions = [
     {
         questionNumber : "Question 1/6:",
@@ -76,7 +76,6 @@ let TIMER;
 let score = 0;
 var countdown; 
 
-// render a question
 function renderQuestion(){
     let q = questions[runningQuestion];
     question.innerHTML = q.question;
@@ -124,8 +123,6 @@ function startTimer(duration, display) {
 
 
 
-
-
 function renderProgress(){
     for(let qIndex = 0; qIndex <= lastQuestion; qIndex++){
         progress.innerHTML += "<div class='prog' id="+ qIndex +"></div>";
@@ -152,12 +149,12 @@ function checkAnswer(answer){
 }
 
 function answerIsCorrect(){
-   document.getElementById(runningQuestion).innerHTML += "<img src='images/right.png'>";
+   document.getElementById(runningQuestion).innerHTML += "<img src='assets/images/right.png'>";
 }
 function answerIsWrong(){
-    alert("For every wrong answer 10 seconds is deducted from your time.");
+    //alert("For every wrong answer 10 seconds is deducted from your time.");
     TIMER -= 10;
-    document.getElementById(runningQuestion).innerHTML += "<img src='images/wrong.png'>";
+    document.getElementById(runningQuestion).innerHTML += "<img src='assets/images/wrong.png'>";
 }
 
 
@@ -179,101 +176,80 @@ function scoreRender(){
 
 
 
+var initials = "";
 
 
-
-
-
-
-
-
-
-
-var todoInput = document.querySelector("#todo-text");
-var todoForm = document.querySelector("#todo-form");
-var todoList = document.querySelector("#todo-list");
-var todoCountSpan = document.querySelector("#todo-count");
-
-var todos = []; // convert to object
+ // convert to object
 // stringify 2 arrays objects 
 
 //JSON.Parse
 
 init();
 
-function renderTodos() {
-  // Clear todoList element and update todoCountSpan
-  todoList.innerHTML = "";
-  todoCountSpan.textContent = todos.length;
+function renderInitials() {
+  initialsList.innerHTML = "";
 
-  // Render a new li for each todo
-  for (var i = 0; i < todos.length; i++) {
-    var todo = todos[i];
+  // Render a new li for each initial
+  for (var i = 0; i < initials.length; i++) {
+    var initial = initials[i];
 
     var li = document.createElement("li");
-    li.textContent = todo;
+    li.textContent = initial;
     li.setAttribute("data-index", i);
 
     var button = document.createElement("button");
     button.textContent = "Clear Score";
 
     li.appendChild(button);
-    todoList.appendChild(li);
+    initialsList.appendChild(li);
   }
 }
 
 function init() {
   // Get stored todos from localStorage
   // Parsing the JSON string to an object
-  var storedTodos = JSON.parse(localStorage.getItem("todos"));
+  var storedInitials = JSON.parse(localStorage.getItem("initials"));
 
-  // If todos were retrieved from localStorage, update the todos array to it
-  if (storedTodos !== null) {
-    todos = storedTodos;
+  if (storedInitials !== null) {
+    initials = storedInitials;
   }
 
-  // Render todos to the DOM
-  renderTodos();
+  renderInitials();
 }
 
-function storeTodos() {
+function storeInitials() {
   // Stringify and set "todos" key in localStorage to todos array
-  localStorage.setItem("todos", JSON.stringify(todos));
+  localStorage.setItem("initials", JSON.stringify(initials));
 }
 
 // When form is submitted...
-todoForm.addEventListener("submit", function(event) {
+initialsForm.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  var todoText = todoInput.value.trim();
-
-  // Return from function early if submitted todoText is blank
-  if (todoText === "") {
+  var initialsText = initialsInput.value.trim();
+  if (initialsText === "") {
     return;
   }
 
-  // Add new todoText to todos array, clear the input
-  todos.push(todoText);
-  todoInput.value = "";
+  initials.push(initialsText);
+  initials.push(scorePerCent);
+  initialsInput.value = "";
 
-  // Store updated todos in localStorage, re-render the list
-  storeTodos();
-  renderTodos();
+  storeInitials();
+  renderInitials();
 });
 
 // When a element inside of the todoList is clicked...
-todoList.addEventListener("click", function(event) {
+initialsList.addEventListener("click", function(event) {
   var element = event.target;
 
   // If that element is a button...
   if (element.matches("button") === true) {
-    // Get its data-index value and remove the todo element from the list
     var index = element.parentElement.getAttribute("data-index");
-    todos.splice(index, 1);
+    initials.splice(index, 1);
 
-    // Store updated todos in localStorage, re-render the list
-    storeTodos();
-    renderTodos();
+    storeInitials();
+    renderInitials();
   }
 });
 

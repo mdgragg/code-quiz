@@ -183,9 +183,9 @@ input {
 
 
 
-.todos { margin-top: -65px;}
+.initials { margin-top: -65px;}
 
-#todo-list li {
+#initials-list li {
     list-style: none;
     text-transform: uppercase;
     font-size: 25px;
@@ -194,7 +194,7 @@ input {
     vertical-align: middle;
 }
 
-#todo-list button {
+#initials-list button {
     
     font-size: 15px;
     font-weight: 300;
