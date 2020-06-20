@@ -10,6 +10,7 @@ const choiceD = document.getElementById("D");
 const progress = document.getElementById("progress");
 const scoreDiv = document.getElementById("scoreContainer");
 
+var whiteHeader = document.querySelector(".white-bg");
 var enterScore = document.querySelector(".todos");
 
 
@@ -68,12 +69,12 @@ let questions = [
     }
 ];
 
-// create some variables
 const lastQuestion = questions.length - 1;
 let runningQuestion = 0;
 let count = 0;
 let TIMER;
 let score = 0;
+var countdown; 
 
 // render a question
 function renderQuestion(){
@@ -88,23 +89,23 @@ function renderQuestion(){
 
 start.addEventListener("click",startQuiz);
 
+
 function startQuiz(){
     start.style.display = "none";
     renderQuestion();
     quiz.style.display = "block";
 
     renderProgress();
-    
-    var twoMinutes = 5 * 2,
-    display = document.querySelector('#time');
-    startTimer(twoMinutes, display);
 
+    var timeLeft = 90,
+    display = document.querySelector('#time');
+    startTimer(timeLeft, display);
 }
 
 
 function startTimer(duration, display) {
-    var TIMER = duration, minutes, seconds;
-    setInterval(function () {
+    TIMER = duration
+    countdown = setInterval(function () {
         minutes = parseInt(TIMER / 60, 10)
         seconds = parseInt(TIMER % 60, 10);
 
@@ -117,13 +118,14 @@ function startTimer(duration, display) {
             TIMER == duration;
             scoreRender();
         }
+
     }, 1000);
 }
 
 
 
 
-// render progress
+
 function renderProgress(){
     for(let qIndex = 0; qIndex <= lastQuestion; qIndex++){
         progress.innerHTML += "<div class='prog' id="+ qIndex +"></div>";
@@ -132,8 +134,6 @@ function renderProgress(){
 
 
 
-
-// checkAnwer
 function checkAnswer(answer){
     if( answer == questions[runningQuestion].correct){
         score++;
@@ -147,29 +147,33 @@ function checkAnswer(answer){
         renderQuestion();
     }else{
         scoreRender();
+        
     }
 }
 
 function answerIsCorrect(){
-    document.getElementById(runningQuestion).style.backgroundImage = "url('paper.gif')";
+   document.getElementById(runningQuestion).innerHTML += "<img src='images/right.png'>";
 }
 function answerIsWrong(){
-    document.getElementById(runningQuestion).style.backgroundColor = "#9b0000";
+    alert("For every wrong answer 10 seconds is deducted from your time.");
+    TIMER -= 10;
+    document.getElementById(runningQuestion).innerHTML += "<img src='images/wrong.png'>";
 }
 
 
-
-// score render
 function scoreRender(){
     quiz.style.display = "none";
     scoreDiv.style.display = "block";
+    whiteHeader.style.display = "block";
     enterScore.style.display = "block";
-
-    // calculate the amount of question percent answered by the user
+    
+    clearInterval(countdown);
+    
     const scorePerCent = Math.round(100 * score/questions.length);     
     scoreDiv.innerHTML += "<p>You answered "+ score + "/6 questions correctly</p>";
     scoreDiv.innerHTML += "<h1>"+ scorePerCent +"%</h1>";
 
+
 }
 
 
@@ -185,12 +189,15 @@ function scoreRender(){
 
 
 
-var scoreInput = document.querySelector("#save-score");
+var todoInput = document.querySelector("#todo-text");
 var todoForm = document.querySelector("#todo-form");
 var todoList = document.querySelector("#todo-list");
 var todoCountSpan = document.querySelector("#todo-count");
 
-var todos = [];
+var todos = []; // convert to object
+// stringify 2 arrays objects 
+
+//JSON.Parse
 
 init();
 
@@ -208,7 +215,7 @@ function renderTodos() {
     li.setAttribute("data-index", i);
 
     var button = document.createElement("button");
-    button.textContent = "Complete";
+    button.textContent = "Clear Score";
 
     li.appendChild(button);
     todoList.appendChild(li);
@@ -238,7 +245,7 @@ function storeTodos() {
 todoForm.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  var todoText = scoreInput.value.trim();
+  var todoText = todoInput.value.trim();
 
   // Return from function early if submitted todoText is blank
   if (todoText === "") {
@@ -247,7 +254,7 @@ todoForm.addEventListener("submit", function(event) {
 
   // Add new todoText to todos array, clear the input
   todos.push(todoText);
-  scoreInput.value = "";
+  todoInput.value = "";
 
   // Store updated todos in localStorage, re-render the list
   storeTodos();
@@ -269,12 +276,6 @@ todoList.addEventListener("click", function(event) {
     renderTodos();
   }
 });
-
-
-
-
-
-
 
 
 
