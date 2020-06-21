@@ -199,7 +199,6 @@ input {
     border: none;
     color: dimgrey;
     padding: 10px 10px;
-    transition: all .2s ease-in-out;
     font-size: 15px;
     font-weight: 300;
     margin-left: 15px;
@@ -210,9 +209,8 @@ input {
 
 #initials-list button:hover {
     cursor: pointer;
-    transform: scale(1.1);
     background: #DEF2F1;
-    border: 2px solid #DEF2F1;
+    border: none;
     color: #17252A;
 }
 
