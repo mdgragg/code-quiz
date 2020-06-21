@@ -8,6 +8,8 @@ const choiceC = document.getElementById("C");
 const choiceD = document.getElementById("D");
 const progress = document.getElementById("progress");
 const scoreDiv = document.getElementById("scoreContainer");
+const userScore = document.getElementById("user-score");
+var initials = "";
 
 var whiteHeader = document.querySelector(".white-bg");
 var enterScore = document.querySelector(".initials");
@@ -152,7 +154,7 @@ function answerIsCorrect(){
    document.getElementById(runningQuestion).innerHTML += "<img src='assets/images/right.png'>";
 }
 function answerIsWrong(){
-    //alert("For every wrong answer 10 seconds is deducted from your time.");
+    alert("For every wrong answer 10 seconds is deducted from your time.");
     TIMER -= 10;
     document.getElementById(runningQuestion).innerHTML += "<img src='assets/images/wrong.png'>";
 }
@@ -175,21 +177,16 @@ function scoreRender(){
 
 
 
-
-var initials = "";
-
-
- // convert to object
-// stringify 2 arrays objects 
-
-//JSON.Parse
-
 init();
+
+function renderScore(){   
+    userScore.innerHTML += "<p>"+ scorePerCent +"%</p>";
+}
+
 
 function renderInitials() {
   initialsList.innerHTML = "";
 
-  // Render a new li for each initial
   for (var i = 0; i < initials.length; i++) {
     var initial = initials[i];
 
@@ -206,14 +203,10 @@ function renderInitials() {
 }
 
 function init() {
-  // Get stored todos from localStorage
-  // Parsing the JSON string to an object
   var storedInitials = JSON.parse(localStorage.getItem("initials"));
-
   if (storedInitials !== null) {
     initials = storedInitials;
   }
-
   renderInitials();
 }
 
@@ -221,6 +214,11 @@ function storeInitials() {
   // Stringify and set "todos" key in localStorage to todos array
   localStorage.setItem("initials", JSON.stringify(initials));
 }
+
+function storeScore() {
+    // Stringify and set "todos" key in localStorage to todos array
+    localStorage.setItem("user-score", JSON.stringify(userScore));
+  }
 
 // When form is submitted...
 initialsForm.addEventListener("submit", function(event) {
@@ -235,7 +233,9 @@ initialsForm.addEventListener("submit", function(event) {
   initialsInput.value = "";
 
   storeInitials();
+  storeScore();
   renderInitials();
+  renderScore();
 });
 
 // When a element inside of the todoList is clicked...
@@ -248,9 +248,16 @@ initialsList.addEventListener("click", function(event) {
     initials.splice(index, 1);
 
     storeInitials();
+    storeScore();
     renderInitials();
+    renderScore();
+
   }
 });
+
+
+
+
 
 
 
