@@ -209,7 +209,7 @@ function scoreRender(){
     function storeInitials() {
     localStorage.setItem("initials", JSON.stringify(initials));
     }
-
+ 
 
     // When form is submitted...
     initialsForm.addEventListener("submit", function(event) {
