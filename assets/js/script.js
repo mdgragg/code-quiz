@@ -9,7 +9,6 @@ const choiceD = document.getElementById("D");
 const progress = document.getElementById("progress");
 const scoreDiv = document.getElementById("scoreContainer");
 const userScore = document.getElementById("user-score");
-var initials = "";
 
 var whiteHeader = document.querySelector(".white-bg");
 var enterScore = document.querySelector(".initials");
@@ -17,6 +16,8 @@ var enterScore = document.querySelector(".initials");
 var initialsInput = document.querySelector("#initials-text");
 var initialsForm = document.querySelector("#initials-form");
 var initialsList = document.querySelector("#initials-list");
+
+
 
 
 let questions = [
@@ -173,87 +174,79 @@ function scoreRender(){
     scoreDiv.innerHTML += "<h1>"+ scorePerCent +"%</h1>";
 
 
-}
+    var initials = "";
+
+    init();
+
+    function renderInitials() {
+        initialsList.innerHTML = "";
 
 
 
-init();
+    for (var i = 0; i < initials.length; i++) {
+        var initial = initials[i].name + " - " + initials[i].score +"%";  
+    
+        var li = document.createElement("li");
+        li.textContent = initial;
+        li.setAttribute("data-index", i);
 
-function renderScore(){   
-    userScore.innerHTML += "<p>"+ scorePerCent +"%</p>";
-}
+        var button = document.createElement("button");
+        button.textContent = "Clear Score";
+
+        li.appendChild(button);
+        initialsList.appendChild(li);
+        }
+    }
+
+    function init() {
+    var storedInitials = JSON.parse(localStorage.getItem("initials"));
+    if (storedInitials !== null) {
+        initials = storedInitials;
+    }
+    renderInitials();
+    }
+
+    function storeInitials() {
+    localStorage.setItem("initials", JSON.stringify(initials));
+    }
 
 
-function renderInitials() {
-  initialsList.innerHTML = "";
+    // When form is submitted...
+    initialsForm.addEventListener("submit", function(event) {
+    event.preventDefault();
 
-  for (var i = 0; i < initials.length; i++) {
-    var initial = initials[i];
+    var initialsText = initialsInput.value.trim();
+    if (initialsText === "") {
+        return;
+    }
 
-    var li = document.createElement("li");
-    li.textContent = initial;
-    li.setAttribute("data-index", i);
+    initials.push({name: initialsText, score: scorePerCent});
+    initialsInput.value = "";
 
-    var button = document.createElement("button");
-    button.textContent = "Clear Score";
-
-    li.appendChild(button);
-    initialsList.appendChild(li);
-  }
-}
-
-function init() {
-  var storedInitials = JSON.parse(localStorage.getItem("initials"));
-  if (storedInitials !== null) {
-    initials = storedInitials;
-  }
-  renderInitials();
-}
-
-function storeInitials() {
-  // Stringify and set "todos" key in localStorage to todos array
-  localStorage.setItem("initials", JSON.stringify(initials));
-}
-
-function storeScore() {
-    // Stringify and set "todos" key in localStorage to todos array
-    localStorage.setItem("user-score", JSON.stringify(userScore));
-  }
-
-// When form is submitted...
-initialsForm.addEventListener("submit", function(event) {
-  event.preventDefault();
-
-  var initialsText = initialsInput.value.trim();
-  if (initialsText === "") {
-    return;
-  }
-
-  initials.push(initialsText);
-  initialsInput.value = "";
-
-  storeInitials();
-  storeScore();
-  renderInitials();
-  renderScore();
-});
-
-// When a element inside of the todoList is clicked...
-initialsList.addEventListener("click", function(event) {
-  var element = event.target;
-
-  // If that element is a button...
-  if (element.matches("button") === true) {
-    var index = element.parentElement.getAttribute("data-index");
-    initials.splice(index, 1);
+    initials.sort(function(a, b) {
+        return b.score - a.score; 
+    });
 
     storeInitials();
-    storeScore();
     renderInitials();
-    renderScore();
 
-  }
-});
+    });
+
+    initialsList.addEventListener("click", function(event) {
+    var element = event.target;
+
+    if (element.matches("button") === true) {
+        var index = element.parentElement.getAttribute("data-index");
+        initials.splice(index, 1);
+
+        storeInitials();
+        renderInitials();
+    }
+    });
+
+
+
+}
 
 
 
