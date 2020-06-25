@@ -174,14 +174,14 @@ function scoreRender(){
     scoreDiv.innerHTML += "<h1>"+ scorePerCent +"%</h1>";
 
 
-    var initials = "";
+
+
+    var initials = [];
 
     init();
 
     function renderInitials() {
         initialsList.innerHTML = "";
-
-
 
     for (var i = 0; i < initials.length; i++) {
         var initial = initials[i].name + " - " + initials[i].score +"%";  
